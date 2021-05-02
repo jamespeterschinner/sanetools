@@ -1,0 +1,17 @@
+{
+  "name": "itertools",
+  "version": "1.0.0",
+  "description": "python itertools for javascript",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test mocha"
+  },
+  "author": "James Schinner",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^8.3.2"
+  }
+}
