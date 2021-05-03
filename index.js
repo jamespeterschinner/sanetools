@@ -1,7 +1,5 @@
-console.log("loading Itertools");
-
-var Itertools;
-(function (Itertools) {
+var sanetools;
+(function (sanetools) {
 
     identity = (arraylikeOrIterable) =>
         new Wrapper(function* () {
@@ -30,52 +28,52 @@ var Itertools;
         }
 
         takeWhile(predicate) {
-            return Itertools.takeWhile(predicate, this)
+            return sanetools.takeWhile(predicate, this)
         }
 
         enumerate() {
-            return Itertools.enumerate(this)
+            return sanetools.enumerate(this)
         }
 
         take(number) {
-            return Itertools.take(number, this)
+            return sanetools.take(number, this)
         }
 
         cycle(times = -1) {
-            return Itertools.cycle(this, times)
+            return sanetools.cycle(this, times)
         }
 
         accumulate(operator = add, initial = null) {
-            return Itertools.accumulate(this, operator, initial)
+            return sanetools.accumulate(this, operator, initial)
         }
 
         tee(splits = 2) {
-            return Itertools.tee(this, splits)
+            return sanetools.tee(this, splits)
         }
 
         drop(items = 1) {
-            return Itertools.drop(this, items)
+            return sanetools.drop(this, items)
         }
 
         step(step = 1) {
-            return Itertools.step(this, step)
+            return sanetools.step(this, step)
         }
 
         islice(start = 0, stop = null, step = 0) {
-            return Itertools.islice(this, start, stop, step)
+            return sanetools.islice(this, start, stop, step)
         }
 
         map(func) {
-            return Itertools.map(func, this)
+            return sanetools.map(func, this)
         }
 
         nwise(n = 2) {
-            return Itertools.nwise(this, n)
+            return sanetools.nwise(this, n)
         }
 
     }
 
-    Itertools.map = (func, iterable) =>
+    sanetools.map = (func, iterable) =>
         new Wrapper(function* () {
             for (let item of iterable) {
                 yield func(item)
@@ -83,7 +81,7 @@ var Itertools;
 
         }())
 
-    Itertools.zip = (...args) =>
+    sanetools.zip = (...args) =>
         new Wrapper(function* () {
             let iterators = args.map(identity);
             while (true) {
@@ -98,7 +96,7 @@ var Itertools;
         }())
 
 
-    Itertools.tee = (iterable, splits = 2) =>
+    sanetools.tee = (iterable, splits = 2) =>
         new Wrapper(function* () {
             let indexes = Array(splits).fill(0);
             let acc = [];
@@ -119,7 +117,7 @@ var Itertools;
 
                 return bufferFull;
             }
-            for (let idxIndex of Itertools.range(splits)) {
+            for (let idxIndex of sanetools.range(splits)) {
                 yield new Wrapper(function* () {
                     while (true) {
                         if (bufferIterator(indexes[idxIndex])) {
@@ -136,7 +134,7 @@ var Itertools;
             return
         }())
 
-    Itertools.drop = (iterable, items = 1) =>
+    sanetools.drop = (iterable, items = 1) =>
         new Wrapper(function* () {
             let count = 0;
             while (count < items) {
@@ -152,7 +150,7 @@ var Itertools;
 
         }())
 
-    Itertools.step = (iterable, step = 1) =>
+    sanetools.step = (iterable, step = 1) =>
         new Wrapper(function* () {
             let count = 0;
             while (true) {
@@ -172,15 +170,13 @@ var Itertools;
 
         }())
 
-    Itertools.islice = (iterable, start = 0, stop = null, step = 1) =>
-        new Wrapper(function () {
-            // Not a generator function*
-            // It is a generator builder
+    sanetools.islice = (iterable, start = 0, stop = null, step = 1) => {
+            // Not a generator function*, It is a generator builder.
             let gen;
             if (start == 0) {
                 gen = iterable
             } else {
-                gen = Itertools.drop(iterable, start)
+                gen = sanetools.drop(iterable, start)
             }
             if (step > 0) {
                 gen = gen.step(step)
@@ -190,19 +186,20 @@ var Itertools;
             }
             return gen
 
-        }())
+        }
 
 
-    Itertools.nwise = (iterable, n = 2) =>
-        Itertools.zip(...
-            Itertools.tee(iterable, n).enumerate().map(
+    sanetools.nwise = (iterable, n = 2) =>
+        // Not a generator function*, It is a generator builder.
+        sanetools.zip(...
+            sanetools.tee(iterable, n).enumerate().map(
                 function ([idx, gen]) {
                     return gen.islice(idx);
                 }).collect()
         )
 
 
-    Itertools.count = (start = 0, step = 1) =>
+    sanetools.count = (start = 0, step = 1) =>
         new Wrapper(function* () {
             let n = start;
             while (true) {
@@ -210,7 +207,7 @@ var Itertools;
             }
         }())
 
-    Itertools.range = (start = 0, stop = NaN, step = 1) =>
+    sanetools.range = (start = 0, stop = NaN, step = 1) =>
         new Wrapper(function* () {
             if (isNaN(stop)) {
                 stop = start;
@@ -225,7 +222,7 @@ var Itertools;
 
         }())
 
-    Itertools.cycle = (objectOrIterable, times = -1) =>
+    sanetools.cycle = (objectOrIterable, times = -1) =>
         new Wrapper(function* () {
             let count = 0;
             let previousItems = [];
@@ -256,10 +253,10 @@ var Itertools;
         }())
 
 
-    Itertools.accumulate = (iterable, operator = add, initial = null) =>
+    sanetools.accumulate = (iterable, operator = add, initial = null) =>
         new Wrapper(function* () {
             let acc;
-            for (let [index, item] of Itertools.enumerate(iterable)) {
+            for (let [index, item] of sanetools.enumerate(iterable)) {
                 if (index === 0) {
                     if (initial !== null) {
                         acc = operator(item, initial);
@@ -276,7 +273,7 @@ var Itertools;
         }())
 
 
-    Itertools.enumerate = (iterable) =>
+    sanetools.enumerate = (iterable) =>
         new Wrapper(function* () {
             let index = 0;
             for (let item of iterable) {
@@ -285,9 +282,9 @@ var Itertools;
             }
         }())
 
-    Itertools.take = (number, iterable) =>
+    sanetools.take = (number, iterable) =>
         new Wrapper(function* () {
-            for (let [index, item] of Itertools.enumerate(iterable)) {
+            for (let [index, item] of sanetools.enumerate(iterable)) {
 
                 if (index < number) {
                     yield item
@@ -298,7 +295,7 @@ var Itertools;
 
         }())
 
-    Itertools.takeWhile = (predicate, iterable) =>
+    sanetools.takeWhile = (predicate, iterable) =>
         new Wrapper(function* () {
             for (let item of iterable) {
                 if (predicate(item)) {
@@ -311,4 +308,4 @@ var Itertools;
 
 
 
-}(Itertools || (Itertools = {})))
+}(sanetools || (sanetools = {})))
