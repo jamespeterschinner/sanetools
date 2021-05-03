@@ -14,7 +14,7 @@ Rational, this projected stared off as a way to learn about javascript generator
 
 There are two distinct categories of genertaors in this libray. Ones that create initial values and ones that transform values.
 
-The two value creating generators are `range` and `count` range generates a finite stream of values and count generates an infinite stream of values.
+The two value creating generators are `range` and `count`. Range generates a finite stream of values and count generates an infinite stream of values.
 
 ###### note: don't call `cycle` on an infinite generator
 
