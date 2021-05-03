@@ -158,7 +158,7 @@ var sanetools;
                 if (count == 0) {
                     yield value
                 } else if (done || value === undefined) {
-                    return
+                    break
                 }
                 count += 1;
 
