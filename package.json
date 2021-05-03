@@ -1,13 +1,14 @@
 {
-  "name": "itertools",
+  "name": "sanetools",
+  "type": "module",
   "version": "1.0.0",
-  "description": "python itertools for javascript",
-  "main": "index.js",
+  "description": "Generator chaining functions",
+  "main": "main.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "test mocha"
+    "test": "mocha"
   },
   "author": "James Schinner",
   "license": "MIT",

@@ -1,15 +1,12 @@
-var sanetools;
+export var sanetools;
 (function (sanetools) {
 
-    identity = (arraylikeOrIterable) =>
+    sanetools.identity = (arraylikeOrIterable) =>
         new Wrapper(function* () {
             for (let item of arraylikeOrIterable) {
                 yield item
             }
         }())
-
-    // default accumulate operator
-    add = (a, b) => a + b;
 
     class Wrapper {
         constructor(generator) {
@@ -18,7 +15,7 @@ var sanetools;
 
         [Symbol.iterator]() {
             return this.generator
-        }
+        } 
 
         next() {
             return this.generator.next()
@@ -43,7 +40,7 @@ var sanetools;
             return sanetools.cycle(this, times)
         }
 
-        accumulate(operator = add, initial = null) {
+        accumulate(operator = (a, b) => a + b, initial = null) {
             return sanetools.accumulate(this, operator, initial)
         }
 
@@ -83,7 +80,7 @@ var sanetools;
 
     sanetools.zip = (...args) =>
         new Wrapper(function* () {
-            let iterators = args.map(identity);
+            let iterators = args.map(sanetools.identity);
             while (true) {
                 let result = iterators.map(it => it.next().value)
                 if (result.every(item => item != undefined)) {
