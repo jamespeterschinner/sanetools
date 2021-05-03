@@ -23,7 +23,7 @@ Once you have a stream of values, you can chain the value transforming generator
 ### example
 
 ```javascript
-    >> sanetools.count(13, 2).nwise(3).drop(2).take(5).collect();
+    >> sanetools.count(13, 2).window(3).drop(2).take(5).collect();
 ```
 
 The above code says "starting from **thirteen** and counting by **two**, give me the next **three** elements for each item, disregard the first **two** blocks of three and only take the next **five**. Then collect the result into an Array"
