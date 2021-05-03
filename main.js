@@ -64,8 +64,8 @@ export var sanetools;
             return sanetools.map(func, this)
         }
 
-        nwise(n = 2) {
-            return sanetools.nwise(this, n)
+        window(n = 2) {
+            return sanetools.window(this, n)
         }
 
     }
@@ -187,7 +187,7 @@ export var sanetools;
     }
 
 
-    sanetools.nwise = (iterable, n = 2) =>
+    sanetools.window = (iterable, n = 2) =>
         // Not a generator function*, it is a generator builder.
         sanetools.zip(...
             sanetools.tee(iterable, n).enumerate().map(
