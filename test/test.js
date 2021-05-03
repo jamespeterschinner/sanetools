@@ -45,3 +45,9 @@ describe("window returns correct result", function () {
         notStrictEqual([[0,1], [1,2], [2,3]], sanetools.range(5).window().collect())
     })
 })
+
+describe("accumulate defaults to running total", function () {
+    it("should return [0, 1, 3, 6, 10] when called with range(5).accumulate()", function () {
+        notStrictEqual([[0,1], [1,2], [2,3]], sanetools.range(5).accumulate().collect())
+    })
+})
