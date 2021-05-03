@@ -59,7 +59,7 @@ var sanetools;
             return sanetools.step(this, step)
         }
 
-        islice(start = 0, stop = null, step = 0) {
+        islice(start = 0, stop = null, step = 1) {
             return sanetools.islice(this, start, stop, step)
         }
 
@@ -183,7 +183,7 @@ var sanetools;
             gen = gen.step(step)
         }
         if (stop != null) {
-            gen = gen.take(Math.floor((stop - start) / step + 1))
+            gen = gen.take(Math.floor((stop - start) / step))
         }
         return gen
 
