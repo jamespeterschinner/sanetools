@@ -1,12 +1,7 @@
 export var sanetools;
 (function (sanetools) {
 
-    sanetools.identity = (arraylikeOrIterable) =>
-        new Wrapper(function* () {
-            for (let item of arraylikeOrIterable) {
-                yield item
-            }
-        }())
+
 
     class Wrapper {
         constructor(generator) {
@@ -15,7 +10,7 @@ export var sanetools;
 
         [Symbol.iterator]() {
             return this.generator
-        } 
+        }
 
         next() {
             return this.generator.next()
@@ -33,7 +28,7 @@ export var sanetools;
         }
 
         take(number) {
-            return sanetools.take(number, this)
+            return sanetools.take(this, number)
         }
 
         cycle(times = -1) {
@@ -56,21 +51,45 @@ export var sanetools;
             return sanetools.step(this, step)
         }
 
-        islice(start = 0, stop = null, step = 1) {
-            return sanetools.islice(this, start, stop, step)
+        slice(start = 0, stop = null, step = 1) {
+            return sanetools.slice(this, start, stop, step)
         }
 
         map(func) {
-            return sanetools.map(func, this)
+            return sanetools.map(this, func)
         }
 
         window(n = 2) {
             return sanetools.window(this, n)
         }
 
+        flatten() {
+            return sanetools.flatten(this)
+        }
+
     }
 
-    sanetools.map = (func, iterable) =>
+    sanetools.identity = (arraylikeOrIterable) =>
+        new Wrapper(function* () {
+            for (let item of arraylikeOrIterable) {
+                yield item
+            }
+        }())
+
+    sanetools.flatten = (iterable) =>
+        new Wrapper(function* () {
+            for (let it of iterable) {
+                try {
+                    for (let item of it) {
+                        yield item
+                    }
+                } catch (TypeError) {
+                    yield it
+                }
+            }
+        }())
+
+    sanetools.map = (iterable, func) =>
         new Wrapper(function* () {
             for (let item of iterable) {
                 yield func(item)
@@ -111,7 +130,6 @@ export var sanetools;
                     acc.shift();
                     indexes = indexes.map(idx => idx - 1);
                 }
-
                 return bufferFull;
             }
             for (let idxIndex of sanetools.range(splits)) {
@@ -131,44 +149,28 @@ export var sanetools;
             return
         }())
 
-    sanetools.drop = (iterable, items = 1) =>
-        new Wrapper(function* () {
-            let count = 0;
-            while (count < items) {
-                let { value, done } = iterable.next();
-                if (done) { return }
-                count += 1;
-            }
-            for (let item of iterable) {
-                yield item
-            }
-
-            return
-
-        }())
+    sanetools.drop = (iterable, drop = 1) => {
+        let generator = sanetools.identity(iterable)
+        for (let _ of sanetools.range(drop)){
+            generator.next()
+        }
+        return generator
+    }
 
     sanetools.step = (iterable, step = 1) =>
         new Wrapper(function* () {
             let count = 0;
-            while (true) {
-                let { value, done } = iterable.next();
-                if (value == undefined || done) {
-                    break
-                } else if (count === 0) {
-                    yield value
+            for (let item of iterable) {
+                if (count == 0) {
+                    yield item
+                    count++
+                } else if (count >= step) {
+                    count = 0
                 }
-                count += 1;
-
-                if (count >= step) {
-                    count = 0;
-                }
-
             }
-            return
-
         }())
 
-    sanetools.islice = (iterable, start = 0, stop = null, step = 1) => {
+    sanetools.slice = (iterable, start = 0, stop = null, step = 1) => {
         // Not a generator function*, it is a generator builder.
         let gen;
         if (start == 0) {
@@ -192,7 +194,7 @@ export var sanetools;
         sanetools.zip(...
             sanetools.tee(iterable, n).enumerate().map(
                 function ([idx, gen]) {
-                    return gen.islice(idx);
+                    return gen.slice(idx);
                 }).collect()
         )
 
@@ -281,17 +283,17 @@ export var sanetools;
             }
         }())
 
-    sanetools.take = (number, iterable) =>
+    sanetools.take = (iterable, number) =>
         new Wrapper(function* () {
-            for (let [index, item] of sanetools.enumerate(iterable)) {
-
-                if (index < number) {
-                    yield item
+            let count = 0;
+            for (let item of iterable) {
+                if (count == number) {
+                    break
                 } else {
-                    return
+                    yield item
+                    count++
                 }
             }
-
         }())
 
     sanetools.takeWhile = (predicate, iterable) =>
