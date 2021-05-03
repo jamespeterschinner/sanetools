@@ -172,7 +172,7 @@ var sanetools;
         }())
 
     sanetools.islice = (iterable, start = 0, stop = null, step = 1) => {
-        // Not a generator function*, It is a generator builder.
+        // Not a generator function*, it is a generator builder.
         let gen;
         if (start == 0) {
             gen = iterable
@@ -191,7 +191,7 @@ var sanetools;
 
 
     sanetools.nwise = (iterable, n = 2) =>
-        // Not a generator function*, It is a generator builder.
+        // Not a generator function*, it is a generator builder.
         sanetools.zip(...
             sanetools.tee(iterable, n).enumerate().map(
                 function ([idx, gen]) {
@@ -204,7 +204,8 @@ var sanetools;
         new Wrapper(function* () {
             let n = start;
             while (true) {
-                yield n += step
+                yield n;
+                n += step
             }
         }())
 
