@@ -155,10 +155,10 @@ var sanetools;
             let count = 0;
             while (true) {
                 let { value, done } = iterable.next();
-                if (count == 0) {
-                    yield value
-                } else if (done || value === undefined) {
+                if (value == undefined || done) {
                     break
+                } else if (count === 0) {
+                    yield value
                 }
                 count += 1;
 
@@ -167,26 +167,27 @@ var sanetools;
                 }
 
             }
+            return
 
         }())
 
     sanetools.islice = (iterable, start = 0, stop = null, step = 1) => {
-            // Not a generator function*, It is a generator builder.
-            let gen;
-            if (start == 0) {
-                gen = iterable
-            } else {
-                gen = sanetools.drop(iterable, start)
-            }
-            if (step > 0) {
-                gen = gen.step(step)
-            }
-            if (stop != null) {
-                gen = gen.take(Math.floor((stop - start) / step + 1))
-            }
-            return gen
-
+        // Not a generator function*, It is a generator builder.
+        let gen;
+        if (start == 0) {
+            gen = iterable
+        } else {
+            gen = sanetools.drop(iterable, start)
         }
+        if (step > 0) {
+            gen = gen.step(step)
+        }
+        if (stop != null) {
+            gen = gen.take(Math.floor((stop - start) / step + 1))
+        }
+        return gen
+
+    }
 
 
     sanetools.nwise = (iterable, n = 2) =>
