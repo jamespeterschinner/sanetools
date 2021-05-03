@@ -33,19 +33,17 @@ The above code says "starting from **thirteen** and counting by **two**, give me
 ```
     Array(5)
     ​
-    0: Array(3) [ 19, 21, 23 ]
+    0: Array(3) [ 17, 19, 21 ]
     ​
-    1: Array(3) [ 21, 23, 25 ]
+    1: Array(3) [ 19, 21, 23 ]
     ​
-    2: Array(3) [ 23, 25, 27 ]
+    2: Array(3) [ 21, 23, 25 ]
     ​
-    3: Array(3) [ 25, 27, 29 ]
+    3: Array(3) [ 23, 25, 27 ]
     ​
-    4: Array(3) [ 27, 29, 31 ]
+    4: Array(3) [ 25, 27, 29 ]
     ​
     length: 5
-    ​
-    <prototype>: Array 
 
     ...
 
