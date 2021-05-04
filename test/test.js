@@ -10,7 +10,7 @@ describe("range function returns array ", function () {
 
 describe("enumerate add index to items", function () {
     it("should return [[0,{}], [1,{}], [2,{}]] when called with cycle({}).take(3).enumerate()", function () {
-        notStrictEqual([[0,{}], [1,{}], [2,{}]], sanetools.cycle({}).take(3).enumerate().collect())
+        notStrictEqual([[0, {}], [1, {}], [2, {}]], sanetools.cycle({}).take(3).enumerate().collect())
     })
 })
 
@@ -42,12 +42,25 @@ describe("zip returns correct result when called with tee generators", function 
 
 describe("window returns correct result", function () {
     it("should return [[0,1], [1,2], [2,3]] when called with range(4).window()", function () {
-        notStrictEqual([[0,1], [1,2], [2,3]], sanetools.range(5).window().collect())
+        notStrictEqual([[0, 1], [1, 2], [2, 3]], sanetools.range(5).window().collect())
     })
 })
 
 describe("accumulate defaults to running total", function () {
     it("should return [0, 1, 3, 6, 10] when called with range(5).accumulate()", function () {
-        notStrictEqual([[0,1], [1,2], [2,3]], sanetools.range(5).accumulate().collect())
+        notStrictEqual([[0, 1], [1, 2], [2, 3]], sanetools.range(5).accumulate().collect())
+    })
+})
+
+describe("Testing counts default behaviour", function () {
+    it("should count from 0 by 1's by default", function () {
+        notStrictEqual([0, 1, 2, 3, 4], sanetools.count().take(5).collect())
+    })
+})
+
+
+describe("Testing step funtion", function () {
+    it("should step by the value provided", function () {
+        notStrictEqual([0, 3, 6], sanetools.count().step(3).take(3).collect())
     })
 })

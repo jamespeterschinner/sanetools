@@ -64,12 +64,39 @@ export var sanetools;
             return sanetools.flatten(this)
         }
 
+        filter(predicate = item => item){
+            return sanetools.filter(this, predicate)
+        }
+
+        filterMap(predicate){
+            return sanetools.filterMap(this, predicate)
+        }
+
     }
 
     sanetools.identity = (arraylikeOrIterable) =>
         new Wrapper(function* () {
             for (let item of arraylikeOrIterable) {
                 yield item
+            }
+        }())
+
+    sanetools.filter = (iterable, predicate) =>
+        new Wrapper(function* (){
+            for (let item of iterable){
+                if (predicate(item)){
+                    yield item
+                }
+            }
+        }())
+
+    sanetools.filterMap = (iterable, predicate) =>
+        new Wrapper(function* (){
+            for (let item of iterable){
+                let result = predicate(item)
+                if (result){
+                    yield result
+                }
             }
         }())
 
@@ -160,8 +187,10 @@ export var sanetools;
             for (let item of iterable) {
                 if (count == 0) {
                     yield item
-                    count++
-                } else if (count >= step) {
+                    
+                }
+                count += 1
+                if (count >= step) {
                     count = 0
                 }
             }
