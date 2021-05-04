@@ -1,8 +1,5 @@
 export var sanetools;
 (function (sanetools) {
-
-
-
     class Wrapper {
         constructor(generator) {
             this.generator = generator
@@ -99,9 +96,9 @@ export var sanetools;
 
     sanetools.zip = (...args) =>
         new Wrapper(function* () {
-            let iterators = args.map(sanetools.identity);
+            let generators = args.map(sanetools.identity);
             while (true) {
-                let result = iterators.map(it => it.next().value)
+                let result = generators.map(it => it.next().value)
                 if (result.every(item => item != undefined)) {
                     yield result;
                 } else {
